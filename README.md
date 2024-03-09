@@ -8,6 +8,6 @@ Checkpoint-related notifications keep you informed on a platformer level's check
 
 Adjust every setting related to solid blocks (and gameplay elements) to your heart's content. (Well, *almost* every setting. "NoTouch" is still quite difficult to deal with and has been supplemented with a toggleable Noclip-esque option for hazards only.)
 
-This Geode mod is licensed under LGPLv2.
+This Geode mod is licensed under LGPLv2, and is unavailable for macOS.
 
 Due to the nature of this mod, a video demonstration under GitHub's 10MB file size limit isn't possible. Go mess around with this mod on your own!
