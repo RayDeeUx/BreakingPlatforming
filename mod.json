@@ -19,7 +19,7 @@
 		},
 		"noCheckpointsNotify": {
 			"name": "Notify if No Checkpoints",
-			"description": "Notifies you if a platformer level has no checkpoints.",
+			"description": "Notifies you if a platformer level has no checkpoints when you jump for the first time.",
 			"type": "bool",
 			"default": true
 		},
