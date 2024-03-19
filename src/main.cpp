@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 
 using namespace geode::prelude;
 
@@ -8,6 +9,15 @@ std::list<int> hazards = { 8, 39, 103, 392, 216, 217, 218, 458, 144, 205, 145, 4
 
 int numCheckpoints = 0;
 int timesCalled = 0;
+
+class $modify(MyLevelEditorLayer, LevelEditorLayer) {
+	bool init(GJGameLevel* p0, bool p1) {
+		if (!LevelEditorLayer::init(p0, p1)) return false;
+		numCheckpoints = 0;
+		timesCalled = 0;
+		return true;
+	}
+};
 
 class $modify(MyPlayLayer, PlayLayer) {
 	void addObject(GameObject* p0) {
@@ -93,10 +103,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 	void levelComplete() {
 		PlayLayer::levelComplete(); // call the original function
-		if (Mod::get()->getSettingValue<bool>("enabled")) {
-			numCheckpoints = 0;
-			timesCalled = 0;
-		}
+		if (Mod::get()->getSettingValue<bool>("enabled")) { numCheckpoints = 0; }
 	}
 	void updateTimeLabel(int p0, int p1, bool p2) {
 		PlayLayer::updateTimeLabel(p0, p1, p2);
