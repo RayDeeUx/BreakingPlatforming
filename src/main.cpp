@@ -114,15 +114,13 @@ class $modify(MyPlayLayer, PlayLayer) {
 		}
 	}
 	void destroyPlayer(PlayerObject* p0, GameObject* p1) {
-		if (!this->m_level->isPlatformer()) {
+		if (!this->m_level->isPlatformer() || !(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("ignoreHazardHitboxes"))) {
 			PlayLayer::destroyPlayer(p0, p1);
 			return;
 		}
 		if (
 			(p1 == nullptr) || 
-			Mod::get()->getSettingValue<bool>("enabled")
-			&& Mod::get()->getSettingValue<bool>("ignoreHazardHitboxes")
-			&& (std::find(hazards.begin(), hazards.end(), p1->m_objectID) != hazards.end())
+			std::find(hazards.begin(), hazards.end(), p1->m_objectID) != hazards.end()
 			&& !(this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated"))
 		) { return; }
 		PlayLayer::destroyPlayer(p0, p1);
