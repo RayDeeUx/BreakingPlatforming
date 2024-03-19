@@ -91,9 +91,9 @@ class $modify(MyPlayLayer, PlayLayer) {
 		PlayLayer::levelComplete(); // call the original function
 		if (Mod::get()->getSettingValue<bool>("enabled")) numCheckpoints = 0;
 	}
-	void onEnterTransitionDidFinish() {
-		PlayLayer::onEnterTransitionDidFinish(); // call the original function
-		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled")) return;
+	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) { return false; }
+		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled")) return true;
 		if (numCheckpoints == 0 && Mod::get()->getSettingValue<bool>("noCheckpointsNotify")) {
 			Notification* notification = Notification::create("There are no checkpoints in this platformer.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
 			notification->show();
@@ -104,6 +104,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 			Notification* notification = Notification::create(checkpointTemplate, nullptr, Mod::get()->getSettingValue<double>("notifDura"));
 			notification->show();
 		}
+		return true;
 	}
 	void destroyPlayer(PlayerObject* p0, GameObject* p1) {
 		if (!this->m_level->isPlatformer()) {
