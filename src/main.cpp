@@ -7,7 +7,7 @@ std::list<int> gameplayElements = { 10, 11, 12, 13, 35, 36, 45, 46, 47, 67, 84, 
 std::list<int> hazards = { 8, 39, 103, 392, 216, 217, 218, 458, 144, 205, 145, 459, 177, 178, 179, 1715, 1719, 1720, 1721, 135, 1711, 1712, 1713, 1714, 1717, 1716, 1731, 367, 1723, 1732, 368, 1724, 1722, 1725, 1726, 1727, 1728, 1729, 1730, 1733, 3610, 3611, 9, 61, 243, 244, 366, 363, 364, 365, 446, 447, 667, 989, 991, 720, 421, 422, 768, 1705, 1706, 1707, 187, 188, 740, 1701, 1702, 1703, 183, 184, 185, 186, 741, 742, 1708, 1709, 1710, 678, 679, 680, 1734, 1735, 1736, 1619, 1620, 98, 88, 89, 397, 398, 399, 3034, 3035, 3036, 3037 };
 
 int numCheckpoints = 0;
-int numJumps = 0;
+int timesCalled = 0;
 
 class $modify(MyPlayLayer, PlayLayer) {
 	void addObject(GameObject* p0) {
@@ -88,20 +88,20 @@ class $modify(MyPlayLayer, PlayLayer) {
 		PlayLayer::onQuit(); // call the original function
 		if (Mod::get()->getSettingValue<bool>("enabled")) {
 			numCheckpoints = 0;
-			numJumps = 0;
+			timesCalled = 0;
 		}
 	}
 	void levelComplete() {
 		PlayLayer::levelComplete(); // call the original function
 		if (Mod::get()->getSettingValue<bool>("enabled")) {
 			numCheckpoints = 0;
-			numJumps = 0;
+			timesCalled = 0;
 		}
 	}
-	void incrementJumps() {
-		PlayLayer::incrementJumps();
-		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || numJumps > 0) return;
-		numJumps++;
+	void updateTimeLabel(int p0, int p1, bool p2) {
+		PlayLayer::updateTimeLabel(p0, p1, p2);
+		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || timesCalled > 0) return;
+		timesCalled++;
 		if (numCheckpoints == 0 && Mod::get()->getSettingValue<bool>("noCheckpointsNotify")) {
 			Notification* notification = Notification::create("There are no checkpoints in this platformer.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
 			notification->show();

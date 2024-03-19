@@ -19,19 +19,19 @@
 		},
 		"noCheckpointsNotify": {
 			"name": "Notify if No Checkpoints",
-			"description": "Notifies you if a platformer level has no checkpoints when you jump for the first time.",
+			"description": "Notifies you if a platformer level has no checkpoints.",
 			"type": "bool",
 			"default": true
 		},
 		"numCheckpointsNotify": {
 			"name": "Notify Number of Checkpoints",
-			"description": "Notifies you of the number of checkpoints in a platformer level when you jump for the first time.\n\nDoes not require previous setting (\"Notify if No Checkpoints\") to be enabled.",
+			"description": "Notifies you of the number of checkpoints in a platformer level.\n\nDoes not require previous setting (\"Notify if No Checkpoints\") to be enabled.",
 			"type": "bool",
 			"default": false
 		},
 		"notifDura": {
 			"name": "Checkpoint Notifications Duration",
-			"description": "Set the duration (in seconds) of the notification showing the number of checkpoints in a platformer level when you jump for the first time.\n\nIf \"Notify if No Checkpoints\" is enabled, the notification for levels without checkpoints will last twice of what's set here (example: setting this option to \"10\" would you a notification that lasts for at most 20 seconds in platformer levels without checkpoints).",
+			"description": "Set the duration (in seconds) of the notification showing the number of checkpoints in a platformer level.\n\nIf \"Notify if No Checkpoints\" is enabled, the notification for levels without checkpoints will last twice of what's set here (example: setting this option to \"10\" would you a notification that lasts for at most 20 seconds in platformer levels without checkpoints).",
 			"type": "float",
 			"default": 2.5,
 			"min": 1.0,
