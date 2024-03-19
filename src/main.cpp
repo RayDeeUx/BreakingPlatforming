@@ -100,7 +100,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	}
 	void incrementJumps() {
 		PlayLayer::incrementJumps();
-		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || numJumps < 1) return;
+		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || numJumps > 0) return;
 		numJumps++;
 		if (numCheckpoints == 0 && Mod::get()->getSettingValue<bool>("noCheckpointsNotify")) {
 			Notification* notification = Notification::create("There are no checkpoints in this platformer.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
