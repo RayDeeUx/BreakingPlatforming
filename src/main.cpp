@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/LevelInfoLayer.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 
 using namespace geode::prelude;
@@ -16,6 +17,22 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 		numCheckpoints = 0;
 		timesCalled = 0;
 		return true;
+	}
+};
+
+class $modify(MyLevelInfoLayer, LevelInfoLayer) {
+	void onGarage(cocos2d::CCObject* sender) {
+		if (!CCDirector::get()->getRunningScene()->getChildByID("EditLevelLayer")) {
+			LevelInfoLayer::onGarage(sender);
+			return;
+		}
+		
+		if (!Mod::get()->getSettingValue<bool>("enabled") || !Mod::get()->getSettingValue<bool>("checkpointCompatibility")) {
+			LevelInfoLayer::onGarage(sender);
+		} else {
+			Notification* notification = Notification::create("[BreakingPlatforming] Disable \"Checkpoint Notif Compat\" for Garage.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
+			notification->show();
+		}
 	}
 };
 

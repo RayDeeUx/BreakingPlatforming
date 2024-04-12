@@ -1,10 +1,10 @@
 {
-	"geode": "2.0.0-beta.21",
+	"geode": "2.0.0-beta.23",
 	"gd": {
         "android": "2.205",
         "win": "2.204"
     },
-	"version": "v1.1.0",
+	"version": "v1.1.1",
 	"id": "raydeeux.breakingplatforming",
 	"name": "BreakingPlatforming",
 	"developer": "RayDeeUx",
@@ -39,6 +39,12 @@
 			"control": {
                 "slider-step": 0.1
             }
+		},
+		"checkpointCompatibility": {
+			"name": "Checkpoint Notif Compat",
+			"description": "Enabling this prevents you from entering the garage before entering a custom editor level. Leaving this disabled will lead to a crash. Any crash reports caused by leaving this setting disabled after v1.1.1 of this mod was released will be ignored.",
+			"type": "bool",
+			"default": false
 		},
 		"enableOnRated": {
 			"name": "Enable Below on Rated Levels",
@@ -156,5 +162,12 @@
 			"min": -1,
 			"max": 1
 		}
-	}
+	},
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=1.8.0",
+			"importance": "required"
+		}
+	]
 }
