@@ -1,10 +1,11 @@
 {
-	"geode": "2.0.0-beta.23",
+	"geode": "2.0.0-beta.25",
 	"gd": {
+        "mac": "2.200",
         "android": "2.205",
         "win": "2.204"
     },
-	"version": "v1.1.1",
+	"version": "v1.1.2",
 	"id": "raydeeux.breakingplatforming",
 	"name": "BreakingPlatforming",
 	"developer": "RayDeeUx",
@@ -39,6 +40,12 @@
 			"control": {
                 "slider-step": 0.1
             }
+		},
+		"noPlatformerJumpAnim": {
+			"name": "Disable Platformer Jump Anim",
+			"description": "Disables the squishing animation cubes make when jumping in place.",
+			"type": "bool",
+			"default": false
 		},
 		"checkpointCompatibility": {
 			"name": "Checkpoint Notif Compat",
