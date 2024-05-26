@@ -1,11 +1,11 @@
 {
-	"geode": "2.0.0-beta.25",
+	"geode": "2.0.0-beta.27",
 	"gd": {
-        "mac": "2.200",
-        "android": "2.205",
-        "win": "2.204"
-    },
-	"version": "v1.2.0",
+	        "mac": "2.200",
+	        "android": "2.205",
+	        "win": "2.204"
+	    },
+	"version": "v1.2.1",
 	"id": "raydeeux.breakingplatforming",
 	"name": "BreakingPlatforming",
 	"developer": "RayDeeUx",
@@ -173,7 +173,7 @@
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
-			"version": ">=1.8.0",
+			"version": ">=1.11.0",
 			"importance": "required"
 		}
 	]
