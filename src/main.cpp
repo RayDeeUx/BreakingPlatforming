@@ -29,10 +29,8 @@ class $modify(MyPlayerObject, PlayerObject){
 class $modify(MyLevelInfoLayer, LevelInfoLayer) {
 	void onGarage(cocos2d::CCObject* sender) {
 		if (!CCDirector::get()->getRunningScene()->getChildByID("EditLevelLayer")) {
-			LevelInfoLayer::onGarage(sender);
-			return;
+			return LevelInfoLayer::onGarage(sender);
 		}
-		
 		if (!Mod::get()->getSettingValue<bool>("enabled") || !Mod::get()->getSettingValue<bool>("checkpointCompatibility")) {
 			LevelInfoLayer::onGarage(sender);
 		} else {
@@ -43,81 +41,78 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
 };
 
 class $modify(MyPlayLayer, PlayLayer) {
+	bool checkSetting(std::string setting, int value = 1) {
+		Mod* brPL = Mod::get();
+		if (!brPL->getSetting(setting)) {
+			return false;
+		}
+		if (value != 0 && value != 1 && value != -1) {
+			brPL->setSettingValue(setting, 0);
+			return (brPL->getSettingValue<int64_t>(setting) == 0);
+		}
+		return (brPL->getSettingValue<int64_t>(setting) == value);
+	}
+	bool checkSettingEnabled(std::string setting) {
+		return !MyPlayLayer::checkSetting(setting, 0);
+	}
 	void addObject(GameObject* theObject) {
 		int objID = theObject->m_objectID;
-		if (objID == 2063) numCheckpoints++;
+		if (objID == 2063) { numCheckpoints++; }
 		if (this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated")) {
-			PlayLayer::addObject(theObject);
-			return;
+			return PlayLayer::addObject(theObject);
 		}
-        if (Mod::get()->getSettingValue<bool>("enabled") && this->m_level->isPlatformer()) {
-        	if (theObject->m_objectType == GameObjectType::Solid || theObject->m_objectType == GameObjectType::Slope) {    
-	            if (Mod::get()->getSettingValue<int64_t>("passableBlock") != 0 && objID != 143) {
-					if (Mod::get()->getSettingValue<int64_t>("passableBlock") == 1) { theObject->m_isPassable = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("passableBlock") == -1) { theObject->m_isPassable = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("breakableBlockPassable") != 0 && objID == 143) {
-					if (Mod::get()->getSettingValue<int64_t>("breakableBlockPassable") == 1) { theObject->m_isPassable = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("breakableBlockPassable") == -1) { theObject->m_isPassable = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("dontBoostX") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("dontBoostX") == 1) { theObject->m_isDontBoostX = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("dontBoostX") == -1) { theObject->m_isDontBoostX = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("dontBoostY") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("dontBoostY") == 1) { theObject->m_isDontBoostY = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("dontBoostY") == -1) { theObject->m_isDontBoostY = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("nonStickX") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("nonStickX") == 1) { theObject->m_isNonStickX = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("nonStickX") == -1) { theObject->m_isNonStickX = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("nonStickY") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("nonStickY") == 1) { theObject->m_isNonStickY = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("nonStickY") == -1) { theObject->m_isNonStickY = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("gripSlope") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("gripSlope") == 1) { theObject->m_isGripSlope = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("gripSlope") == -1) { theObject->m_isGripSlope = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("extraSticky") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("extraSticky") == 1) { theObject->m_isExtraSticky = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("extraSticky") == -1) { theObject->m_isExtraSticky = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("scaleStick") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("scaleStick") == 1) { theObject->m_isScaleStick = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("scaleStick") == -1) { theObject->m_isScaleStick = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("extendColl") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("extendColl") == 1) { theObject->m_hasExtendedCollision = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("extendColl") == -1) { theObject->m_hasExtendedCollision = false; }
-				}
-				if (Mod::get()->getSettingValue<int64_t>("iceBlock") != 0) {
-					if (Mod::get()->getSettingValue<int64_t>("iceBlock") == 1) { theObject->m_isIceBlock = true; }
-					else if (Mod::get()->getSettingValue<int64_t>("iceBlock") == -1) { theObject->m_isIceBlock = false; }
+		if (Mod::get()->getSettingValue<bool>("enabled") && this->m_level->isPlatformer()) {
+        		if (theObject->m_objectType == GameObjectType::Solid || theObject->m_objectType == GameObjectType::Slope) {    
+				if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID != 143) {
+					theObject->m_isPassable = MyPlayLayer::checkSetting("passableBlock");
 				}
 			}
-			if (Mod::get()->getSettingValue<int64_t>("audioScale") != 0) {
-				if (Mod::get()->getSettingValue<int64_t>("audioScale") == 1) { theObject->m_hasNoAudioScale = true; }
-				else if (Mod::get()->getSettingValue<int64_t>("audioScale") == -1) { theObject->m_hasNoAudioScale = false; }
+			if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID == 143) {
+				theObject->m_isPassable = MyPlayLayer::checkSetting("breakableBlockPassable");
 			}
-			if ((((200 <= objID) && (objID <= 203)) || objID == 1334) && Mod::get()->getSettingValue<int64_t>("multiActivate") != 0) {
+			if (MyPlayLayer::checkSettingEnabled("dontBoostX")) {
+				theObject->m_isDontBoostX = MyPlayLayer::checkSetting("dontBoostX");
+			}
+			if (MyPlayLayer::checkSettingEnabled("dontBoostY")) {
+				theObject->m_isDontBoostY = MyPlayLayer::checkSetting("dontBoostY");
+			}
+			if (MyPlayLayer::checkSettingEnabled("nonStickX")) {
+				theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickX");
+			}
+			if (MyPlayLayer::checkSettingEnabled("nonStickY")) {
+				theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickY");
+			}
+			if (MyPlayLayer::checkSettingEnabled("gripSlope") && theObject->m_objectType == GameObjectType::Slope) {
+				theObject->m_isGripSlope = MyPlayLayer::checkSetting("gripSlope");
+			}
+			if (MyPlayLayer::checkSettingEnabled("extraSticky")) {
+				theObject->m_isExtraSticky = MyPlayLayer::checkSetting("extraSticky");
+			}
+			if (MyPlayLayer::checkSettingEnabled("scaleStick")) {
+				theObject->m_isScaleStick = MyPlayLayer::checkSetting("scaleStick");
+			}
+			if (MyPlayLayer::checkSettingEnabled("extendColl")) {
+				theObject->m_hasExtendedCollision = MyPlayLayer::checkSetting("extendColl");
+			}
+			if (MyPlayLayer::checkSettingEnabled("iceBlock")) {
+				theObject->m_isIceBlock = MyPlayLayer::checkSetting("iceBlock");
+			}
+			if (MyPlayLayer::checkSettingEnabled("audioScale")) {
+				theObject->m_hasNoAudioScale = MyPlayLayer::checkSetting("audioScale");
+			}
+			if ((((200 <= objID) && (objID <= 203)) || objID == 1334) && MyPlayLayer::checkSettingEnabled("multiActivate")) {
 				// note to self: in past versions of geode, the correct member to change was m_isMultiActivate
 				auto effectObject = typeinfo_cast<EffectGameObject*>(theObject);
-				if (Mod::get()->getSettingValue<int64_t>("multiActivate") == 1) { effectObject->m_isMultiTriggered = true; }
-				else if (Mod::get()->getSettingValue<int64_t>("multiActivate") == -1) { effectObject->m_isMultiTriggered = false; }
-				PlayLayer::addObject(effectObject); // call the original function
-				return; // abort to avoid accidentally calling original function twice
+				effectObject->m_isMultiTriggered = MyPlayLayer::checkSetting("multiActivate");
+				return PlayLayer::addObject(effectObject); // call the original function + abort to avoid accidentally calling original function twice
 			} else if ((std::find(gameplayElements.begin(), gameplayElements.end(), objID) != gameplayElements.end()) && Mod::get()->getSettingValue<int64_t>("multiActivate") != 0) {
 				auto enhancedObj = typeinfo_cast<EnhancedGameObject*>(theObject);
-				if (Mod::get()->getSettingValue<int64_t>("multiActivate") == 1) { enhancedObj->m_isNoMultiActivate = false; }
-				else if (Mod::get()->getSettingValue<int64_t>("multiActivate") == -1) { enhancedObj->m_isNoMultiActivate = true; }
-				PlayLayer::addObject(enhancedObj); // call the original function
-				return; // abort to avoid accidentally calling original function twice
+				enhancedObj->m_isNoMultiActivate = MyPlayLayer::checkSetting("multiActivate", -1);
+				return PlayLayer::addObject(enhancedObj); // call the original function + abort to avoid accidentally calling original function twice
 			}
 			PlayLayer::addObject(theObject); // call the original function
-        }
-        else PlayLayer::addObject(theObject); // call the original function
+        	}
+        	else PlayLayer::addObject(theObject); // call the original function
 	}
 	void onQuit() {
 		PlayLayer::onQuit(); // call the original function
