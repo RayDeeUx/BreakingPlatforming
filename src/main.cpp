@@ -47,7 +47,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 			return false;
 		}
 		if (value != 0 && value != 1 && value != -1) {
-			brPL->setSettingValue(setting, 0);
+			brPL->setSettingValue<int64_t>(setting, 0);
 			return (brPL->getSettingValue<int64_t>(setting) == 0);
 		}
 		return (brPL->getSettingValue<int64_t>(setting) == value);
