@@ -41,16 +41,15 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
 };
 
 class $modify(MyPlayLayer, PlayLayer) {
-	bool checkSetting(std::string setting, int value = 1) {
-		Mod* brPL = Mod::get();
-		if (!brPL->getSetting(setting)) {
-			return false;
-		}
+	void forceSettingBehave(std::string setting) {
+		int value = Mod::get()->getSettingValue<int64_t>(setting);
 		if (value != 0 && value != 1 && value != -1) {
-			brPL->setSettingValue<int64_t>(setting, 0);
-			return (brPL->getSettingValue<int64_t>(setting) == 0);
+			Mod::get()->setSettingValue<int64_t>(setting, 0);
 		}
-		return (brPL->getSettingValue<int64_t>(setting) == value);
+	}
+	bool checkSetting(std::string setting, int value = 1) {
+		MyPlayLayer::forceSettingBehave(setting);
+		return (Mod::get()->getSettingValue<int64_t>(setting) == value);
 	}
 	bool checkSettingEnabled(std::string setting) {
 		return !MyPlayLayer::checkSetting(setting, 0);
