@@ -1,4 +1,6 @@
 # BreakingPlatforming Changelog
+## v1.2.1
+- Port to 2.206. Big thanks to CatXus, Aktimoose, ninXout, and hiimjustin000 for helping out with testing!
 ## v1.2.0
 - Add macOS support.
 - Added a new toggle to disable the platformer squish jumping animation.
