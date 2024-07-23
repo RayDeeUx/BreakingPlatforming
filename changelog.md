@@ -1,6 +1,8 @@
 # BreakingPlatforming Changelog
 ## v1.2.1
 - Port to 2.206. Big thanks to CatXus, Aktimoose, ninXout, and hiimjustin000 for helping out with testing!
+- Remove the "Mark as MultiActivate" option for macOS users due to incomplete bindings.
+- Add suggested dependency for ML500's "Checkpoint Vibe Check"/"Is 'Disable checkpoints' on?" mod.
 ## v1.2.0
 - Add macOS support.
 - Added a new toggle to disable the platformer squish jumping animation.
