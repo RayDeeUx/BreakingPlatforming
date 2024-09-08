@@ -99,7 +99,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 			if (MyPlayLayer::checkSettingEnabled("audioScale")) {
 				theObject->m_hasNoAudioScale = MyPlayLayer::checkSetting("audioScale");
 			}
-			#ifndef GEODE_IS_MACOS
+			// #ifndef GEODE_IS_MACOS
 			if ((((200 <= objID) && (objID <= 203)) || objID == 1334) && MyPlayLayer::checkSettingEnabled("multiActivate")) {
 				// note to self: in past versions of geode, the correct member to change was m_isMultiActivate
 				auto effectObject = typeinfo_cast<EffectGameObject*>(theObject);
@@ -110,7 +110,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 				enhancedObj->m_isNoMultiActivate = MyPlayLayer::checkSetting("multiActivate", -1);
 				return PlayLayer::addObject(enhancedObj); // call the original function + abort to avoid accidentally calling original function twice
 			}
-			#endif
+			// #endif
 			PlayLayer::addObject(theObject); // call the original function
         	}
         	else PlayLayer::addObject(theObject); // call the original function
