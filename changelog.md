@@ -1,4 +1,6 @@
 # BreakingPlatforming Changelog
+## v1.2.2
+- Port to 2.2074.
 ## v1.2.1
 - Port to 2.206. Big thanks to CatXus, Aktimoose, ninXout, and hiimjustin000 for helping out with testing!
 - Remove the "Mark as MultiActivate" option for macOS users due to incomplete bindings.
