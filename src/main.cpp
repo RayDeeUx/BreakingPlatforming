@@ -22,113 +22,93 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 
 class $modify(MyPlayerObject, PlayerObject){
 	void animatePlatformerJump(float p0) {
-		if (!(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("noPlatformerJumpAnim"))) { PlayerObject::animatePlatformerJump(p0); }
+		if (!(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("noPlatformerJumpAnim")))
+			PlayerObject::animatePlatformerJump(p0);
 	}
 };
 
 class $modify(MyLevelInfoLayer, LevelInfoLayer) {
 	void onGarage(cocos2d::CCObject* sender) {
-		if (!CCDirector::get()->getRunningScene()->getChildByID("EditLevelLayer")) {
+		if (!CCDirector::get()->getRunningScene()->getChildByID("EditLevelLayer"))
 			return LevelInfoLayer::onGarage(sender);
-		}
-		if (!Mod::get()->getSettingValue<bool>("enabled") || !Mod::get()->getSettingValue<bool>("checkpointCompatibility")) {
-			LevelInfoLayer::onGarage(sender);
-		} else {
-			Notification* notification = Notification::create("[BreakingPlatforming] Disable \"Checkpoint Notif Compat\" for Garage.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
-			notification->show();
-		}
+		if (!Mod::get()->getSettingValue<bool>("enabled") || !Mod::get()->getSettingValue<bool>("checkpointCompatibility"))
+			return LevelInfoLayer::onGarage(sender);
+		Notification* notification = Notification::create("[BreakingPlatforming] Disable \"Checkpoint Notif Compat\" for Garage.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
+		notification->show();
 	}
 };
 
 class $modify(MyPlayLayer, PlayLayer) {
-	void forceSettingBehave(std::string setting) {
-		int value = Mod::get()->getSettingValue<int64_t>(setting);
-		if (value != 0 && value != 1 && value != -1) {
-			Mod::get()->setSettingValue<int64_t>(setting, 0);
-		}
+	static void forceSettingBehave(const std::string_view setting) {
+		const auto value = Mod::get()->getSettingValue<int64_t>(setting);
+		if (value == 0 || value == 1 || value == -1) return;
+		Mod::get()->setSettingValue<int64_t>(setting, 0);
 	}
-	bool checkSetting(std::string setting, int value = 1) {
+	static bool checkSetting(const std::string_view setting, int value = 1) {
 		MyPlayLayer::forceSettingBehave(setting);
-		return (Mod::get()->getSettingValue<int64_t>(setting) == value);
+		return Mod::get()->getSettingValue<int64_t>(setting) == value;
 	}
-	bool checkSettingEnabled(std::string setting) {
-		return !MyPlayLayer::checkSetting(setting, 0);
-	}
+	static bool checkSettingEnabled(const std::string_view setting) { return !MyPlayLayer::checkSetting(setting, 0); }
+	static bool isSlope(const GameObject* theObject) { return theObject->m_objectType == GameObjectType::Slope; }
+	static bool isSolid(const GameObject* theObject) { return theObject->m_objectType == GameObjectType::Solid; }
 	void addObject(GameObject* theObject) {
 		int objID = theObject->m_objectID;
 		if (objID == 2063) { numCheckpoints++; }
-		if (this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated")) {
+		if (this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated"))
 			return PlayLayer::addObject(theObject);
+		if (!Mod::get()->getSettingValue<bool>("enabled") || !this->m_level->isPlatformer())
+			return PlayLayer::addObject(theObject); // call the original function
+		if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID != 143 && isSolid(theObject) || isSlope(theObject))
+			theObject->m_isPassable = MyPlayLayer::checkSetting("passableBlock");
+		if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID == 143)
+			theObject->m_isPassable = MyPlayLayer::checkSetting("breakableBlockPassable");
+		if (MyPlayLayer::checkSettingEnabled("dontBoostX"))
+			theObject->m_isDontBoostX = MyPlayLayer::checkSetting("dontBoostX");
+		if (MyPlayLayer::checkSettingEnabled("dontBoostY"))
+			theObject->m_isDontBoostY = MyPlayLayer::checkSetting("dontBoostY");
+		if (MyPlayLayer::checkSettingEnabled("nonStickX"))
+			theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickX");
+		if (MyPlayLayer::checkSettingEnabled("nonStickY"))
+			theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickY");
+		if (MyPlayLayer::checkSettingEnabled("gripSlope") && isSlope(theObject))
+			theObject->m_isGripSlope = MyPlayLayer::checkSetting("gripSlope");
+		if (MyPlayLayer::checkSettingEnabled("extraSticky"))
+			theObject->m_isExtraSticky = MyPlayLayer::checkSetting("extraSticky");
+		if (MyPlayLayer::checkSettingEnabled("scaleStick"))
+			theObject->m_isScaleStick = MyPlayLayer::checkSetting("scaleStick");
+		if (MyPlayLayer::checkSettingEnabled("extendColl"))
+			theObject->m_hasExtendedCollision = MyPlayLayer::checkSetting("extendColl");
+		if (MyPlayLayer::checkSettingEnabled("iceBlock"))
+			theObject->m_isIceBlock = MyPlayLayer::checkSetting("iceBlock");
+		if (MyPlayLayer::checkSettingEnabled("audioScale"))
+			theObject->m_hasNoAudioScale = MyPlayLayer::checkSetting("audioScale");
+		// #ifndef GEODE_IS_MACOS
+		if (((200 <= objID && objID <= 203) || objID == 1334) && MyPlayLayer::checkSettingEnabled("multiActivate")) {
+			// note to self: in past versions of geode, the correct member to change was m_isMultiActivate
+			auto effectObject = typeinfo_cast<EffectGameObject*>(theObject);
+			effectObject->m_isMultiTriggered = MyPlayLayer::checkSetting("multiActivate");
+			return PlayLayer::addObject(effectObject); // call the original function + abort to avoid accidentally calling original function twice
 		}
-		if (Mod::get()->getSettingValue<bool>("enabled") && this->m_level->isPlatformer()) {
-        		if (theObject->m_objectType == GameObjectType::Solid || theObject->m_objectType == GameObjectType::Slope) {    
-				if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID != 143) {
-					theObject->m_isPassable = MyPlayLayer::checkSetting("passableBlock");
-				}
-			}
-			if (MyPlayLayer::checkSettingEnabled("breakableBlockPassable") && objID == 143) {
-				theObject->m_isPassable = MyPlayLayer::checkSetting("breakableBlockPassable");
-			}
-			if (MyPlayLayer::checkSettingEnabled("dontBoostX")) {
-				theObject->m_isDontBoostX = MyPlayLayer::checkSetting("dontBoostX");
-			}
-			if (MyPlayLayer::checkSettingEnabled("dontBoostY")) {
-				theObject->m_isDontBoostY = MyPlayLayer::checkSetting("dontBoostY");
-			}
-			if (MyPlayLayer::checkSettingEnabled("nonStickX")) {
-				theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickX");
-			}
-			if (MyPlayLayer::checkSettingEnabled("nonStickY")) {
-				theObject->m_isNonStickX = MyPlayLayer::checkSetting("nonStickY");
-			}
-			if (MyPlayLayer::checkSettingEnabled("gripSlope") && theObject->m_objectType == GameObjectType::Slope) {
-				theObject->m_isGripSlope = MyPlayLayer::checkSetting("gripSlope");
-			}
-			if (MyPlayLayer::checkSettingEnabled("extraSticky")) {
-				theObject->m_isExtraSticky = MyPlayLayer::checkSetting("extraSticky");
-			}
-			if (MyPlayLayer::checkSettingEnabled("scaleStick")) {
-				theObject->m_isScaleStick = MyPlayLayer::checkSetting("scaleStick");
-			}
-			if (MyPlayLayer::checkSettingEnabled("extendColl")) {
-				theObject->m_hasExtendedCollision = MyPlayLayer::checkSetting("extendColl");
-			}
-			if (MyPlayLayer::checkSettingEnabled("iceBlock")) {
-				theObject->m_isIceBlock = MyPlayLayer::checkSetting("iceBlock");
-			}
-			if (MyPlayLayer::checkSettingEnabled("audioScale")) {
-				theObject->m_hasNoAudioScale = MyPlayLayer::checkSetting("audioScale");
-			}
-			// #ifndef GEODE_IS_MACOS
-			if ((((200 <= objID) && (objID <= 203)) || objID == 1334) && MyPlayLayer::checkSettingEnabled("multiActivate")) {
-				// note to self: in past versions of geode, the correct member to change was m_isMultiActivate
-				auto effectObject = typeinfo_cast<EffectGameObject*>(theObject);
-				effectObject->m_isMultiTriggered = MyPlayLayer::checkSetting("multiActivate");
-				return PlayLayer::addObject(effectObject); // call the original function + abort to avoid accidentally calling original function twice
-			} else if ((std::find(gameplayElements.begin(), gameplayElements.end(), objID) != gameplayElements.end()) && Mod::get()->getSettingValue<int64_t>("multiActivate") != 0) {
-				auto enhancedObj = typeinfo_cast<EnhancedGameObject*>(theObject);
-				enhancedObj->m_isNoMultiActivate = MyPlayLayer::checkSetting("multiActivate", -1);
-				return PlayLayer::addObject(enhancedObj); // call the original function + abort to avoid accidentally calling original function twice
-			}
-			// #endif
-			PlayLayer::addObject(theObject); // call the original function
-        	}
-        	else PlayLayer::addObject(theObject); // call the original function
+		if (std::ranges::find(gameplayElements.begin(), gameplayElements.end(), objID) != gameplayElements.end() && Mod::get()->getSettingValue<int64_t>("multiActivate") != 0) {
+			auto enhancedObj = typeinfo_cast<EnhancedGameObject*>(theObject);
+			enhancedObj->m_isNoMultiActivate = MyPlayLayer::checkSetting("multiActivate", -1);
+			return PlayLayer::addObject(enhancedObj); // call the original function + abort to avoid accidentally calling original function twice
+		}
+		// #endif
+		PlayLayer::addObject(theObject); // call the original function
 	}
 	void onQuit() {
+		numCheckpoints = 0;
+		timesCalled = 0;
 		PlayLayer::onQuit(); // call the original function
-		if (Mod::get()->getSettingValue<bool>("enabled")) {
-			numCheckpoints = 0;
-			timesCalled = 0;
-		}
 	}
 	void levelComplete() {
 		PlayLayer::levelComplete(); // call the original function
-		if (Mod::get()->getSettingValue<bool>("enabled")) { numCheckpoints = 0; }
+		numCheckpoints = 0;
 	}
 	void updateTimeLabel(int p0, int p1, bool p2) {
 		PlayLayer::updateTimeLabel(p0, p1, p2);
-		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || timesCalled > 0) { return; }
+		if (!this->m_level->isPlatformer() || !Mod::get()->getSettingValue<bool>("enabled") || timesCalled > 0) return;
 		timesCalled++;
 		if (numCheckpoints == 0 && Mod::get()->getSettingValue<bool>("noCheckpointsNotify")) {
 			Notification* notification = Notification::create("There are no checkpoints in this platformer.", nullptr, Mod::get()->getSettingValue<double>("notifDura") * 2.f);
@@ -142,15 +122,12 @@ class $modify(MyPlayLayer, PlayLayer) {
 		}
 	}
 	void destroyPlayer(PlayerObject* thePlayer, GameObject* theObject) {
-		if (!this->m_level->isPlatformer() || !(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("ignoreHazardHitboxes"))) {
-			PlayLayer::destroyPlayer(thePlayer, theObject);
-			return;
-		}
-		if (
-			(theObject == nullptr) || 
+		if (!this->m_level->isPlatformer() || !(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("ignoreHazardHitboxes")))
+			return PlayLayer::destroyPlayer(thePlayer, theObject);
+		if (!theObject ||
 			(std::find(hazards.begin(), hazards.end(), theObject->m_objectID) != hazards.end() || theObject->m_objectType == GameObjectType::Hazard || theObject->m_objectType == GameObjectType::AnimatedHazard)
 			&& !(this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated"))
-		) { return; }
+		) return;
 		PlayLayer::destroyPlayer(thePlayer, theObject);
 	}
 };

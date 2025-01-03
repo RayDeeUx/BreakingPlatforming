@@ -1,11 +1,11 @@
 {
-	"geode": "4.0.0-beta.1",
+	"geode": "4.0.1",
 	"gd": {
-	        "mac": "2.2074",
-	        "android": "2.2074",
-	        "win": "2.2074"
+		"mac": "2.2074",
+		"android": "2.2074",
+		"win": "2.2074"
 	},
-	"version": "v1.2.2",
+	"version": "v1.2.3",
 	"id": "raydeeux.breakingplatforming",
 	"name": "BreakingPlatforming",
 	"developer": "RayDeeUx",
@@ -38,8 +38,8 @@
 			"min": 1.0,
 			"max": 10.0,
 			"control": {
-                "slider-step": 0.1
-            }
+		"slider-step": 0.1
+	    }
 		},
 		"noPlatformerJumpAnim": {
 			"name": "Disable Platformer Jump Anim",
@@ -87,8 +87,7 @@
 			"type": "int",
 			"default": 0,
 			"min": -1,
-			"max": 1,
-			"platforms": ["win", "android"]
+			"max": 1
 		},
 		"gripSlope": {
 			"name": "Mark All GripSlope",
@@ -174,18 +173,21 @@
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
-			"version": ">=1.12.0",
+			"version": ">=1.18.0",
 			"importance": "required"
 		},
 		{
 			"id": "ml5.checkpoint-vibe-check",
 			"version": "*",
-			"importance": "suggested",
-			"platforms": ["win", "android"]
+			"importance": "suggested"
 		}
 	],
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
 		"info": "Ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
+	},
+	"links": {
+		"community": "https://discord.gg/WqZBYdBWZW",
+		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	}
 }
