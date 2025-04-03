@@ -1,11 +1,12 @@
 {
-	"geode": "4.0.1",
+	"geode": "4.3.1",
 	"gd": {
 		"mac": "2.2074",
 		"android": "2.2074",
-		"win": "2.2074"
+		"win": "2.2074",
+		"ios": "2.2074"
 	},
-	"version": "v1.2.3",
+	"version": "v1.2.4",
 	"id": "raydeeux.breakingplatforming",
 	"name": "BreakingPlatforming",
 	"developer": "RayDeeUx",
@@ -35,11 +36,11 @@
 			"description": "Set the duration (in seconds) of the notification showing the number of checkpoints in a platformer level.\n\nIf \"Notify if No Checkpoints\" is enabled, the notification for levels without checkpoints will last twice of what's set here (example: setting this option to \"10\" would you a notification that lasts for at most 20 seconds in platformer levels without checkpoints).",
 			"type": "float",
 			"default": 2.5,
-			"min": 1.0,
-			"max": 10.0,
+			"min": 1,
+			"max": 10,
 			"control": {
-		"slider-step": 0.1
-	    }
+				"slider-step": 0.1
+			}
 		},
 		"noPlatformerJumpAnim": {
 			"name": "Disable Platformer Jump Anim",
