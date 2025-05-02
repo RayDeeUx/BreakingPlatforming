@@ -1,4 +1,6 @@
 # BreakingPlatforming Changelog
+## v1.2.4
+- Experimental iOS support.
 ## v1.2.3
 - Minor code refactoring.
 - Brought back "Mark as MultiActivate" option for macOS users thanks to complete bindings.
