@@ -1,4 +1,6 @@
 # BreakingPlatforming Changelog
+## v1.2.5
+- Port to GD 2.2081.
 ## v1.2.4
 - Experimental iOS support.
 ## v1.2.3

@@ -22,8 +22,8 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 
 class $modify(MyPlayerObject, PlayerObject){
 	void animatePlatformerJump(float p0) {
-		if (!(Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("noPlatformerJumpAnim")))
-			PlayerObject::animatePlatformerJump(p0);
+		if (Mod::get()->getSettingValue<bool>("enabled") && Mod::get()->getSettingValue<bool>("noPlatformerJumpAnim")) return;
+		PlayerObject::animatePlatformerJump(p0);
 	}
 };
 
@@ -52,8 +52,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 	static bool isSlope(const GameObject* theObject) { return theObject->m_objectType == GameObjectType::Slope; }
 	static bool isSolid(const GameObject* theObject) { return theObject->m_objectType == GameObjectType::Solid; }
 	void addObject(GameObject* theObject) {
-		int objID = theObject->m_objectID;
-		if (objID == 2063) { numCheckpoints++; }
+		const int objID = theObject->m_objectID;
+		if (objID == 2063 && theObject->m_objectType != GameObjectType::Decoration) { numCheckpoints++; }
 		if (this->m_level->m_stars.value() != 0 && !Mod::get()->getSettingValue<bool>("enableOnRated"))
 			return PlayLayer::addObject(theObject);
 		if (!Mod::get()->getSettingValue<bool>("enabled") || !this->m_level->isPlatformer())
