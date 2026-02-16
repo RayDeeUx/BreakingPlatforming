@@ -171,18 +171,9 @@
 			"max": 1
 		}
 	},
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
-			"version": ">=1.18.0",
-			"importance": "required"
-		},
-		{
-			"id": "ml5.checkpoint-vibe-check",
-			"version": "*",
-			"importance": "suggested"
-		}
-	],
+	"dependencies": {
+		"geode.node-ids": ">=1.22.0"
+	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
 		"info": "Ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
